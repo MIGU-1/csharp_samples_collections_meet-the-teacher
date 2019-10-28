@@ -33,8 +33,6 @@ namespace Utils
             }
             return null;
         }
-
-
         public static string GetFullFolderNameInApplicationTree(string folderName)
         {
             if (string.IsNullOrEmpty(folderName)) return null;
@@ -52,9 +50,6 @@ namespace Utils
             }
             return null;
         }
-
-
-
         /// <summary>
         /// Liest eine csv-Datei, die im Pfad liegt in ein zweidimensionales
         /// String-Array ein.
