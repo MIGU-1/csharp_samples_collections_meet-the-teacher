@@ -11,8 +11,8 @@ namespace MeetTheTeacher.Logic
     public class TeacherWithDetail : Teacher
     {
         public int Detail { get; set; }
-        public TeacherWithDetail(string name, string day, int unit, DateTime timeFrom, DateTime timeTo, int room, string comment, int detail)
-            : base(name, day, unit, timeFrom, timeTo, room, comment)
+        public TeacherWithDetail(string name, string day, string unit, string time, string room, string comment, int detail)
+            : base(name, day, unit, time, room, comment)
         {
             Detail = detail;
         }
