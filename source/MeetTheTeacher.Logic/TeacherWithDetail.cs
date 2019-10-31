@@ -16,5 +16,9 @@ namespace MeetTheTeacher.Logic
         {
             Detail = detail;
         }
+        public override string GetHtmlForName()
+        {
+            return $"<a href=\"?id={Detail}\">{base.GetHtmlForName()}</a>";
+        }
     }
 }

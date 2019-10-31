@@ -46,7 +46,7 @@ namespace MeetTheTeacher.Logic
                 if (IsDetailTeacher(data[0]))
                 {
                     int detail;
-                    _details.TryGetValue(data[0], out detail);
+                    _details.TryGetValue(data[0].ToLower(), out detail);
                     TeacherWithDetail newTeacher = new TeacherWithDetail(
                         data[0],
                         data[1],
@@ -81,10 +81,10 @@ namespace MeetTheTeacher.Logic
         {
             for (int i = 0; i < names.Length; i++)
             {
-                foreach (Teacher teacher in _teachers)
+                for (int j = 0; j < _teachers.Count; j++)
                 {
-                    if (names[i].ToLower().Equals(teacher.Name.ToLower()))
-                        _teachers.Remove(teacher);
+                    if (_teachers[j].Name.ToLower().Equals(names[i].ToLower()))
+                        _teachers.RemoveAt(j);
                 }
             }
         }
@@ -122,7 +122,7 @@ namespace MeetTheTeacher.Logic
             for (int i = 0; i < lines.Length; i++)
             {
                 string[] data = lines[i].Split(";");
-                _details.Add(data[0], Convert.ToInt32(data[1]));
+                _details.Add(data[0].ToLower(), Convert.ToInt32(data[1]));
             }
         }
         /// <summary>
@@ -131,12 +131,37 @@ namespace MeetTheTeacher.Logic
         /// <returns>Text für die Html-Tabelle</returns>
         public string GetHtmlTable()
         {
-            throw new NotImplementedException();
+            _teachers.Sort();
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("<table id=\"tabelle\">");
+            sb.AppendLine();
+            sb.AppendLine("<tr>");
+            sb.AppendLine("<th align=\"center\">Name</th>");
+            sb.AppendLine("<th align=\"center\">Tag</th>");
+            sb.AppendLine("<th align=\"center\">Raum</th>");
+            sb.AppendLine("<th align=\"center\">Zeit von</th>");
+            sb.AppendLine("<th align=\"center\">Zeit bis</th>");
+            sb.AppendLine("</tr>");
+
+            foreach (Teacher teacher in _teachers)
+            {
+                sb.AppendLine();
+                sb.AppendLine("<tr>");
+                sb.AppendLine($"<td align=\"left\">{teacher.GetHtmlForName()}</td>");
+                sb.AppendLine($"<td align=\"left\">{teacher.Day}</td>");
+                sb.AppendLine($"<td align=\"left\">{teacher.Room}</td>");
+                sb.AppendLine($"<td align=\"left\">{teacher.TimeFrom.TimeOfDay}</td>");
+                sb.AppendLine($"<td align=\"left\">{teacher.TimeTo.TimeOfDay}</td>");
+                sb.AppendLine("</tr>");
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
         }
         private bool IsDetailTeacher(string name)
         {
-            return _details.ContainsKey(name);
+            return _details.ContainsKey(name.ToLower());
         }
-
     }
 }

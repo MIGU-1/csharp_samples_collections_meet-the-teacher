@@ -9,7 +9,7 @@ namespace MeetTheTeacher.Logic
     /// Verwaltet einen Eintrag in der Sprechstundentabelle
     /// Basisklasse für TeacherWithDetail
     /// </summary>
-    public class Teacher
+    public class Teacher : IComparable
     {
         public string Name { get; set; }
         public string Day { get; set; }
@@ -41,28 +41,45 @@ namespace MeetTheTeacher.Logic
         private DateTime ConvertToTime(int code, string time)
         {
             DateTime returnTime = new DateTime();
-            string[] times = time.Trim().Split("-");
-            times[1].TrimEnd('h');
-            string[] timeOfDay;
+            time = time.Trim(' ', 'h');
+            string[] times = time.Split("-");
 
-            if (code == 1)
+            if (times.Length == 2)
             {
-                timeOfDay = times[0].Split(":");
-            }
-            else
-            {
-                timeOfDay = times[1].Split(":");
-            }
+                string[] timeOfDay;
 
-            int hrs = Convert.ToInt32(timeOfDay[0]);
-            int min = Convert.ToInt32(timeOfDay[1]);
-            returnTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, hrs, min, 0);
+                if (code == 1)
+                {
+                    timeOfDay = times[0].Trim(' ').Split(":");
+                }
+                else
+                {
+                    timeOfDay = times[1].Trim(' ').Split(":");
+                }
+
+                int hrs;
+                int min;
+                bool hrsOk = Int32.TryParse(timeOfDay[0], out hrs);
+                bool minOk = Int32.TryParse(timeOfDay[1], out min);
+
+                if (hrsOk && minOk)
+                    returnTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, hrs, min, 0);
+            }
 
             return returnTime;
         }
-        public string GetHtmlForName()
+        public virtual string GetHtmlForName()
         {
-            throw new NotImplementedException();
+            return Name;
+        }
+        public int CompareTo(object obj)
+        {
+            Teacher otherT = obj as Teacher;
+
+            if (otherT == null)
+                throw new ArgumentNullException(nameof(obj));
+
+            return otherT.Name.CompareTo(this.Name) * -1;
         }
     }
 }
